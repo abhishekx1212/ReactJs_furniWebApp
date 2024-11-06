@@ -16,9 +16,11 @@ export const productSlice = createSlice({
                 return val.title == action.payload.title
             })
             if (checkQuantity == -1) {
-                state.addToCart.push(action.payload)
+                let pushData = { ...action.payload, quantity: 1 };
+                state.addToCart.push(pushData)
+                console.log(...state.addToCart);
             } else {
-                state.addToCart[checkQuantity].quantity += 1
+                alert("Product already Added in cart")
             }
         },
         quantityManage: (state, action) => {
@@ -26,16 +28,20 @@ export const productSlice = createSlice({
                 return val.id == action.payload.id
             })
             if (action.payload.type == 'increase') {
-                state.addToCart[getOneData].quantity += 1
-            } else {
-                if(state.addToCart[getOneData].quantity == 1){
-                    state.addToCart.splice(getOneData,1)    
+                if(state.addToCart[getOneData].quantity < state.addToCart[getOneData].availableQuantity){
+                    state.addToCart[getOneData].quantity += 1
                 }else{
+                    alert(state.addToCart[getOneData].title+" Out of Stock")
+                }
+            } else {
+                if (state.addToCart[getOneData].quantity == 1) {
+                    state.addToCart.splice(getOneData, 1)
+                } else {
                     state.addToCart[getOneData].quantity -= 1
                 }
             }
         },
-        removeCart: (state, action) => { 
+        removeCart: (state, action) => {
             state.addToCart = state.addToCart.filter((val) => {
                 return val.id != action.payload
             })
